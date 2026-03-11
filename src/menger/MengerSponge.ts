@@ -193,7 +193,7 @@ private buildSponge(x: number, y: number, z: number, size: number, currentLevel:
     const ret : Mat4 = new Mat4().setIdentity();
     
     // Add this line to tilt the cube on the X and Y axes
-    ret.rotate(0.5, new Vec3([1.0, 1.0, 0.0]));
+    //ret.rotate(0.5, new Vec3([1.0, 1.0, 0.0]));
 
     return ret;
   }
