@@ -46,8 +46,8 @@ export let defaultFSText = `
         }
 
         float diffuse = max(dot(N, L), 0.0); 
-        float ambient = 0.5; // Ambient lighting component this number is somewhat arbitrary, but amb + diffuse should not be > 1.0
-        float lighting = ambient + 0.5 * diffuse; // Combine ambient and diffuse lighting
+        float ambient = 0.1; // Ambient lighting component this number is somewhat arbitrary, but amb + diffuse should not be > 1.0
+        float lighting = ambient + 0.9 * diffuse; // Combine ambient and diffuse lighting
 
         gl_FragColor = vec4(baseColor * lighting, 1.0);
     }
