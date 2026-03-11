@@ -49,7 +49,19 @@ export class MengerAnimation extends CanvasAnimation {
   private lightPosition: Vec4 = new Vec4();
   private backgroundColor: Vec4 = new Vec4();
 
-  // TODO: data structures for the floor
+  /* Floor Rendering Info */
+  private floorVAO: WebGLVertexArrayObjectOES = -1;
+  private floorProgram: WebGLProgram = -1;
+  private floorPosBuffer: WebGLBuffer = -1;
+  private floorNormBuffer: WebGLBuffer = -1;
+  private floorIndexBuffer: WebGLBuffer = -1;
+  private floorPosAttribLoc: GLint = -1;
+  private floorNormAttribLoc: GLint = -1;
+  private floorWorldUniformLocation: WebGLUniformLocation = -1;
+  private floorViewUniformLocation: WebGLUniformLocation = -1;
+  private floorProjUniformLocation: WebGLUniformLocation = -1;
+  private floorLightUniformLocation: WebGLUniformLocation = -1;
+  private floorIndexCount: number = 0;
 
 
   constructor(canvas: HTMLCanvasElement) {
@@ -191,13 +203,72 @@ export class MengerAnimation extends CanvasAnimation {
     gl.uniform4fv(this.mengerLightUniformLocation, this.lightPosition.xyzw);
   }
 
-  /**
-   * Sets up the floor and floor drawing
-   */
-  public initFloor(): void {
-      
-      // TODO: your code to set up the floor rendering
-  }
+   /**
+    * Sets up the floor (ground plane) at y = -2 with checkerboard shading.
+    */
+   public initFloor(): void {
+     const gl: WebGLRenderingContext = this.ctx;
+     const extent = 2000;
+     const y = -2.0;
+ 
+     // Large quad at y = -2: vertices in CCW order (top face visible from above)
+     const positions = new Float32Array([
+       -extent, y, -extent, 1,
+        extent, y, -extent, 1,
+        extent, y,  extent, 1,
+       -extent, y,  extent, 1
+     ]);
+     const normals = new Float32Array([
+       0, 1, 0, 0,  0, 1, 0, 0,  0, 1, 0, 0,  0, 1, 0, 0
+     ]);
+     const indices = new Uint32Array([0, 2, 1, 0, 3, 2]); // Two triangles: (0, 2, 1) and (0, 3, 2)
+     this.floorIndexCount = indices.length;
+ 
+     this.floorProgram = WebGLUtilities.createProgram(gl, floorVSText, floorFSText);
+     gl.useProgram(this.floorProgram);
+ 
+     this.floorVAO = this.extVAO.createVertexArrayOES() as WebGLVertexArrayObjectOES;
+     this.extVAO.bindVertexArrayOES(this.floorVAO);
+ 
+     this.floorPosAttribLoc = gl.getAttribLocation(this.floorProgram, "vertPosition");
+     this.floorPosBuffer = gl.createBuffer() as WebGLBuffer;
+     gl.bindBuffer(gl.ARRAY_BUFFER, this.floorPosBuffer);
+     gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
+     gl.vertexAttribPointer(
+       this.floorPosAttribLoc, 4, gl.FLOAT, false,
+       4 * Float32Array.BYTES_PER_ELEMENT, 0
+     );
+     gl.enableVertexAttribArray(this.floorPosAttribLoc);
+ 
+     this.floorNormAttribLoc = gl.getAttribLocation(this.floorProgram, "aNorm");
+     this.floorNormBuffer = gl.createBuffer() as WebGLBuffer;
+     gl.bindBuffer(gl.ARRAY_BUFFER, this.floorNormBuffer);
+     gl.bufferData(gl.ARRAY_BUFFER, normals, gl.STATIC_DRAW);
+     gl.vertexAttribPointer(
+       this.floorNormAttribLoc, 4, gl.FLOAT, false,
+       4 * Float32Array.BYTES_PER_ELEMENT, 0
+     );
+     gl.enableVertexAttribArray(this.floorNormAttribLoc);
+ 
+     this.floorIndexBuffer = gl.createBuffer() as WebGLBuffer;
+     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.floorIndexBuffer);
+     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
+ 
+     this.floorWorldUniformLocation = gl.getUniformLocation(
+       this.floorProgram, "mWorld"
+     ) as WebGLUniformLocation;
+     this.floorViewUniformLocation = gl.getUniformLocation(
+       this.floorProgram, "mView"
+     ) as WebGLUniformLocation;
+     this.floorProjUniformLocation = gl.getUniformLocation(
+       this.floorProgram, "mProj"
+     ) as WebGLUniformLocation;
+     this.floorLightUniformLocation = gl.getUniformLocation(
+       this.floorProgram, "lightPosition"
+     ) as WebGLUniformLocation;
+ 
+     this.extVAO.bindVertexArrayOES(null);
+   }
 
   /**
    * Draws a single frame
