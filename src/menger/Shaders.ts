@@ -98,8 +98,8 @@ export let floorFSText = `
             : vec3(0.95, 0.95, 0.95);
 
         float diffuse = max(dot(N, L), 0.0);
-        float ambient = 0.2;
-        float lighting = ambient + 0.8 * diffuse;
+        float ambient = 0.1;
+        float lighting = ambient + 0.9 * diffuse;
 
         gl_FragColor = vec4(baseColor * lighting, 1.0);
     }

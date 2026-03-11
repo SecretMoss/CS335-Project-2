@@ -361,7 +361,26 @@ export class MengerAnimation extends CanvasAnimation {
     );
 
     // TODO: draw the floor
-    
+    gl.useProgram(this.floorProgram);
+        this.extVAO.bindVertexArrayOES(this.floorVAO);
+        gl.uniformMatrix4fv(
+          this.floorWorldUniformLocation,
+          false,
+          new Float32Array(Mat4.identity.all())
+        );
+        gl.uniformMatrix4fv(
+          this.floorViewUniformLocation,
+          false,
+          new Float32Array(this.gui.viewMatrix().all())
+        );
+        gl.uniformMatrix4fv(
+          this.floorProjUniformLocation,
+          false,
+          new Float32Array(this.gui.projMatrix().all())
+        );
+        gl.uniform4fv(this.floorLightUniformLocation, this.lightPosition.xyzw);
+        gl.drawElements(gl.TRIANGLES, this.floorIndexCount, gl.UNSIGNED_INT, 0);
+      
   }
 
   public setLevel(level: number): void {
