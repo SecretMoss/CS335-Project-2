@@ -66,7 +66,7 @@ export class MengerAnimation extends CanvasAnimation {
   public reset(): void {
 
     /* debugger; */
-    this.lightPosition = new Vec4([-10.0, 10.0, -10.0, 1.0]);
+    this.lightPosition = new Vec4([10.0, 10.0, 10.0, 1.0]);
     this.backgroundColor = new Vec4([0.0, 0.37254903, 0.37254903, 1.0]);
 
     this.initMenger();
