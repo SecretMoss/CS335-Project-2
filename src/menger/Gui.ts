@@ -142,7 +142,7 @@ export class GUI implements IGUI {
 
     /* Left mouse = rotate/swivel */
     if ((mouse.buttons & 1) !== 0) {
-      const dragWorld = this.right.copy().scale(dx).add(this.up.copy().scale(-dy));
+      const dragWorld = this.right.copy().scale(-dx).add(this.up.copy().scale(dy));
       const axis = Vec3.cross(dragWorld, this.look, new Vec3());
 
       if (axis.length() > 1e-6) {
@@ -237,16 +237,16 @@ export class GUI implements IGUI {
       }
 
       case "ArrowLeft": {
-        this.up = this.rotateAroundAxis(this.up, this.look, GUI.rollSpeed);
-        this.right = this.rotateAroundAxis(this.right, this.look, GUI.rollSpeed);
+        this.up = this.rotateAroundAxis(this.up, this.look, -GUI.rollSpeed);
+        this.right = this.rotateAroundAxis(this.right, this.look, -GUI.rollSpeed);
         this.reOrthonormalize();
         this.rebuildCamera();
         break;
       }
 
       case "ArrowRight": {
-        this.up = this.rotateAroundAxis(this.up, this.look, -GUI.rollSpeed);
-        this.right = this.rotateAroundAxis(this.right, this.look, -GUI.rollSpeed);
+        this.up = this.rotateAroundAxis(this.up, this.look, GUI.rollSpeed);
+        this.right = this.rotateAroundAxis(this.right, this.look, GUI.rollSpeed);
         this.reOrthonormalize();
         this.rebuildCamera();
         break;
