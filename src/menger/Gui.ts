@@ -18,9 +18,9 @@ export class GUI implements IGUI {
   private static readonly rollSpeed: number = 0.1;
   private static readonly panSpeed: number = 0.1;
 
-  private camera: Camera;
-  private dragging: boolean;
-  private fps: boolean;
+  private camera!: Camera;
+  private dragging!: boolean;
+  private fps!: boolean;
   private prevX: number;
   private prevY: number;
 
@@ -30,12 +30,12 @@ export class GUI implements IGUI {
   private sponge: MengerSponge;
   private animation: CanvasAnimation;
 
-  private eye: Vec3;
-  private center: Vec3;
-  private look: Vec3;
-  private up: Vec3;
-  private right: Vec3;
-  private cameraDistance: number;
+  private eye!: Vec3;
+  private center!: Vec3;
+  private look!: Vec3;
+  private up!: Vec3;
+  private right!: Vec3;
+  private cameraDistance!: number;
 
   constructor(
     canvas: HTMLCanvasElement,
